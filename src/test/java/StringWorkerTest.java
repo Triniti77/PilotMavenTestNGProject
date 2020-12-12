@@ -12,21 +12,13 @@ public class StringWorkerTest {
     StringWorker stringWorker = new StringWorker();
     StringWorker stringWorker2;
 
-//    @BeforeClass
-//    @Parameters({"val1", "val2"})
-//    public void startUp(String param1 , String param2){
-//        System.out.println("BeforeClass");
-//    }
-
-//    @Parameters({"var1", "var2"})
-
     @Test
     public void test1(){
         assertEquals(stringWorker.concatenate("qwerty", "123", "_+"), "qwerty123_+");
         assertNull(stringWorker2);
     }
 
-    @Test(dataProvider = "getData")
+    @Test(dataProvider = "getData", timeOut = 4000)
     public void instanceDbProvider(int p1, String p2){
         System.out.println("Instance DataProvider Example: Data(" + p1 +", " + p2 + "J");
     }

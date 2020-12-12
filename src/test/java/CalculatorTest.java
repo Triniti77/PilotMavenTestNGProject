@@ -1,7 +1,5 @@
 import org.testng.annotations.*;
 
-import javax.naming.InsufficientResourcesException;
-
 import static org.testng.Assert.*;
 
 public class CalculatorTest {
@@ -17,41 +15,6 @@ public class CalculatorTest {
                 {0, 3, 3},
                 {-5, 7, 2}};
     }
-
-//    @BeforeClass
-//    public void startUp(){
-//        System.out.println("BeforeClass");
-//    }
-//
-//    @AfterClass
-//    public void tearDown(){
-//        System.out.println("AfterClass");
-//    }
-//
-//    @BeforeMethod
-//    public void startUp1(){
-//        System.out.println("BeforeMethod");
-//    }
-//
-//    @AfterMethod
-//    public void tearDown1(){
-//        System.out.println("AfterMethod");
-//    }
-
-//    @Test(description = "This is test which verify sum of two numbers")
-//    public void test1Sum() {
-//        assertEquals(calculator.sum(2,3), 5);
-//    }
-//
-//    @Test(timeOut = 4000)
-//    public void test2Sum() {
-//        assertEquals(calculator.sum(0,3), 3);
-//    }
-//
-//    @Test
-//    public void test3Sum() {
-//        assertEquals(calculator.sum(-5,7), 2);
-//    }
 
     @BeforeClass
     public void startUp() {
@@ -137,7 +100,4 @@ public class CalculatorTest {
         int result = calculator.lastResult();
         assertEquals(result, c);
     }
-
-
-
 }

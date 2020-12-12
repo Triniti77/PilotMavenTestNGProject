@@ -8,6 +8,24 @@
     <artifactId>PilotMavenTestNGProject</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <profiles>
+        <profile>
+            <id>HillelInt</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <env>int</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>HillelQa</id>
+            <properties>
+                <env>qa</env>
+            </properties>
+        </profile>
+    </profiles>
+
     <dependencies>
     <dependency>
         <groupId>org.testng</groupId>
@@ -25,6 +43,20 @@
     </properties>
 
     <build>
+        <filters>
+            <filter>src/main/resources/env/config.${env}.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources/</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+
+
     <plugins>
     <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -36,5 +68,6 @@
     </plugin>
     </plugins>
     </build>
+
 
 </project>

@@ -4,6 +4,7 @@
     <parameter name="div1" value="100"/>
     <parameter name="div2" value="10"/>
     <parameter name="div3" value="10"/>
+    <parameter name="env" value="{env}"/>
     <test name="Test1" parallel="methods" thread-count="3">
         <!-- parallel="classes" thread-count="3" -->
         <classes>
