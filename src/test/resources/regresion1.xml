@@ -1,0 +1,15 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="Negative_trusted_singlepayment_suite" configfailurepolicy="continue">
+    <test name="Parallel_3_threads_tests" parallel="classes" thread-count="3">
+        <classes>
+            <class name="regression.negative.ChapsTests"/>
+            <class name="regression.negative.DWTests"/>
+        </classes>
+    </test>
+    <test name="Sequential_tests">
+        <classes>
+            <class name="regression.negative.SwiftTests"/>
+        </classes>
+    </test>
+</suite>
