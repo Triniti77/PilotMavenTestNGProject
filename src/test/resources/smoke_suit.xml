@@ -5,7 +5,7 @@
         <parameter name="var1" value="Test two parameter"/>
         <parameter name="var2" value="set some value"/>
         <classes>
-            <class name="StringWorkerTest"/>
+            <class name="unitTests.StringWorkerTest"/>
         </classes>
     </test>
 </suite>

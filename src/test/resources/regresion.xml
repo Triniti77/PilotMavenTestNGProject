@@ -8,8 +8,8 @@
     <test name="Test1" parallel="methods" thread-count="3">
         <!-- parallel="classes" thread-count="3" -->
         <classes>
-            <class name="CalculatorTest"/>
-            <class name="StringWorkerTest"/>
+            <class name="unitTests.CalculatorTest"/>
+            <class name="unitTests.StringWorkerTest"/>
         </classes>
     </test>
 </suite>
