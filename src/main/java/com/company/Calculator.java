@@ -1,3 +1,5 @@
+package com.company;
+
 public class Calculator {
     int lastValue = 0;
     int operations = 0;

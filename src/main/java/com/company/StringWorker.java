@@ -1,3 +1,5 @@
+package com.company;
+
 public class StringWorker {
 
     public String concatenate(String a1, String a2, String a3){
