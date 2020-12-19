@@ -1,8 +1,10 @@
-import dataProvides.DataProviderSource;
-import org.testng.annotations.BeforeClass;
+package unitTests;
+
+import unitTests.dataProvides.DataProviderSource;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import com.company.*;
 
 import static org.testng.Assert.*;
 
@@ -14,7 +16,7 @@ public class StringWorkerTest {
 
     @Test
     public void test1(){
-        assertEquals(stringWorker.concatenate("qwerty", "123", "_+"), "qwerty123_+");
+        Assert.assertEquals(stringWorker.concatenate("qwerty", "123", "_+"), "qwerty123_+");
         assertNull(stringWorker2);
     }
 

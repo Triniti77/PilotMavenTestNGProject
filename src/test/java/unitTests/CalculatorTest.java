@@ -1,4 +1,8 @@
+package unitTests;
+
+import org.testng.Assert;
 import org.testng.annotations.*;
+import com.company.*;
 
 import static org.testng.Assert.*;
 
@@ -39,7 +43,7 @@ public class CalculatorTest {
 
     @Test(dataProvider = "sumData")
     public void test1Sum(int x1, int x2,int x3) {
-        assertEquals(calculator.sum(x1, x2), x3);
+        Assert.assertEquals(calculator.sum(x1, x2), x3);
     }
 
     @Test
@@ -52,7 +56,7 @@ public class CalculatorTest {
 
     @Test
     public void test2Multiply() {
-        assertEquals(calculator.multiply(4,0), 0);
+        Assert.assertEquals(calculator.multiply(4,0), 0);
     }
 
     @Test
