@@ -84,8 +84,6 @@ public class RozetkaFilterTest extends BaseUITest {
 
         wait.until(presenceOfElementLocated(catalogBy));
 
-        wait.until(presenceOfElementLocated(catalogBy));
-
         By goodsTitleInnerBy = By.cssSelector(".goods-tile__inner");
         List<WebElement> goods = driver.findElements(goodsTitleInnerBy);
 
@@ -103,11 +101,20 @@ public class RozetkaFilterTest extends BaseUITest {
         By catalogBy = By.cssSelector(".catalog-grid");
         wait.until(presenceOfElementLocated(catalogBy));
 
-        By priceBy = By.xpath("//div[contains(@class,'sidebar-block')][@data-filter-name='38435']"); // 38435 - оперативная память
-        WebElement priceBlock = driver.findElement(priceBy);
-
         driver.findElement(By.xpath("//div[contains(@class,'sidebar-block')][@data-filter-name='38435']//a[@class='checkbox-filter__link']/label[contains(text(), '4 ГБ')]")).click();
+        wait.until(presenceOfElementLocated(catalogBy));
 
+        driver.findElement(By.xpath("//div[contains(@class,'sidebar-block')][@data-filter-name='41404']//a[@class='checkbox-filter__link']/label[contains(text(), '128 ГБ')]")).click();
+        wait.until(presenceOfElementLocated(catalogBy));
+
+        By goodsTitleInnerBy = By.cssSelector(".goods-tile__inner");
+        List<WebElement> goods = driver.findElements(goodsTitleInnerBy);
+
+        By itemTitleBy = By.cssSelector(".goods-tile__title");
+        for (WebElement item : goods) {
+            String title = item.findElement(itemTitleBy).getText();
+            assertTrue(title.contains("4/128GB"), "Check the phone has 4/128GB memory");
+        }
     }
 
     protected void openSearchSamsung() {
