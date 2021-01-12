@@ -1,38 +1,43 @@
 package ui.rozetka;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import ui.BaseUITest;
+import ui.rozetka.po.RozetkaBasketIconElement;
+import ui.rozetka.po.RozetkaItemPage;
+import ui.rozetka.po.RozetkaMainPage;
+import ui.rozetka.po.RozetkaSearchResultPage;
 
-import static org.openqa.selenium.support.ui.ExpectedConditions.presenceOfElementLocated;
 import static org.testng.Assert.assertEquals;
 
-public class RozetkaBasketTest extends BaseUITest {
+public class RozetkaBasketTest extends RozetkaTestBase {
     String searchText = "samsung";
+    RozetkaMainPage mainPage;
+    RozetkaSearchResultPage searchResultPage;
+    RozetkaItemPage itemPage;
+    RozetkaBasketIconElement basketElement;
+
+    @BeforeClass
+    public void initTestClass() {
+        mainPage = new RozetkaMainPage(driver, wait);
+        searchResultPage = new RozetkaSearchResultPage(driver, wait);
+        itemPage = new RozetkaItemPage(driver, wait);
+        basketElement = new RozetkaBasketIconElement(driver, wait);
+    }
 
     @Test
-    public void basketIconTest() {
-        driver.get("https://rozetka.com.ua");
-        driver.findElement(By.name("search")).sendKeys(searchText + Keys.ENTER);
+    public void basketIconTest() throws Exception {
+        mainPage.searchByKeyword(searchText);
+        searchResultPage.enterCatalogItem(0);
 
-        By firstProductBy = By.cssSelector("a.goods-title__picture");
-        wait.until(presenceOfElementLocated(firstProductBy));
-        driver.findElement(firstProductBy);
+        assertEquals(basketElement.itemsInBasket(), 0, "Items in basket should be 0");
 
-        // verify basket is clean
-        By buyButtonBy = By.cssSelector("button.buy-button.button.button_with_icon");
-        wait.until(presenceOfElementLocated(buyButtonBy));
-        assertEquals(driver.findElements(By.cssSelector("a>svg+span")).size(), 0);
-        scrollToElement(driver.findElement(buyButtonBy));
-        driver.findElement(buyButtonBy).click();
-        By createdOrderBy = By.xpath("//div[@class='cart-receipt']//*[contains(@href,'checkout)]");
-        wait.until(presenceOfElementLocated(buyButtonBy));
-        scrollToElement(driver.findElement(createdOrderBy));
-        driver.findElement(createdOrderBy).click();
+        itemPage.putCurrentItemToBasket();
+        itemPage.orderCurrentItem();
 
-        driver.navigate().back();
+        goPageBack();
 
-        assertEquals(driver.findElement(By.cssSelector("a>svg+span")).getText(), "1");
+        assertEquals(basketElement.itemsInBasket(), 1, "Items in basket should be 1");
     }
 }

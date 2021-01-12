@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 
 public class BaseUITest {
     protected WebDriver driver;
@@ -23,6 +24,7 @@ public class BaseUITest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--no-sandbox");
         options.addArguments("start-maximized");
+        options.addArguments("--aggressive-cache-discard");
         driver = new ChromeDriver(options);
         wait = new WebDriverWait(driver, 10);
     }
@@ -32,12 +34,7 @@ public class BaseUITest {
         driver.quit();
     }
 
-    protected void scrollToElement(WebElement element) {
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true)", element);
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    protected void goPageBack() {
+        driver.navigate().back();
     }
 }
