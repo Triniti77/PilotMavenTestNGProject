@@ -6,7 +6,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pageObject.citrus.*;
 
+import java.util.List;
+
 import static com.codeborne.selenide.Selenide.*;
+import static pageObject.utils.Price.extractPrice;
 
 public class CitrusBasketTest {
     HomePage homePage;
@@ -35,7 +38,7 @@ public class CitrusBasketTest {
     }
 
     @Test
-    public void basketViaProductPageTest() {
+    public void basketViaProductPageTest() throws Exception {
         homePage.waitForPageToLoad()
                 .hoverMenuLine("Смартфоны")
                 .clickOnLinkInMenu("Apple");
@@ -73,28 +76,29 @@ public class CitrusBasketTest {
 //                .closePopup()
                 .getSearchFragment()
                 .searchProduct(productName);
-        ElementsCollection products = productListPage.waitForPageToLoad()
-            .getProductsList();
-        SelenideElement product0 = products.get(0);
-        String price0 = productListPage.getProductPrice(product0);
-        String name0 = productListPage.getProductName(product0);
-//        String productListUrl = WebDriverRunner.url();
 
-        SelenideElement product1 = products.get(1);
-        String price1 = productListPage.getProductPrice(product1);
-        String name1 = productListPage.getProductName(product1);
+        List<ProductCardFragment> products = productListPage.waitForPageToLoad()
+                .getProductsList();
 
-        productListPage.addProductToBasket(product0);
-        productListPage.addProductToBasket(product1);
+        ProductCardFragment product0 = products.get(0);
+        String price0 = product0.getPrice();
+        String name0 = product0.getTitle();
+
+        ProductCardFragment product1 = products.get(1);
+        String price1 = product1.getPrice();
+        String name1 = product1.getTitle();
+
+        product0.addToCompare();
+        product1.addToCompare();
 
         productListPage.getBasketFragment().open().getBasketProductList().shouldHaveSize(2);
         productListPage.getBasketFragment().getBasketProductList().get(0).shouldHave(Condition.text(name0));
         productListPage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(name1));
-//        productListPage.getBasketFragment().getBasketPriceList().get(0).shouldHave(Condition.text(price0));
-//        productListPage.getBasketFragment().getBasketPriceList().get(1).shouldHave(Condition.text(price1));
+        productListPage.getBasketFragment().getBasketPriceList().get(0).shouldHave(new MatchPriceCondition(price0));
+        productListPage.getBasketFragment().getBasketPriceList().get(1).shouldHave(new MatchPriceCondition(price1));
 
-        double total = BasePage.extractPrice(price0) + BasePage.extractPrice(price1);
-        productListPage.getBasketFragment().getBasketTotal().shouldHave(Condition.text(String.valueOf((int)total)));
+        int total = extractPrice(price0) + extractPrice(price1);
+        productListPage.getBasketFragment().getBasketTotal().shouldHave(new MatchPriceCondition(total));
     }
 
     @Test
@@ -103,29 +107,30 @@ public class CitrusBasketTest {
 //                .closePopup()
                 .getSearchFragment()
                 .searchProduct(productName);
-        ElementsCollection products = productListPage.waitForPageToLoad()
+        List<ProductCardFragment> products = productListPage.waitForPageToLoad()
                 .getProductsList();
 
-        SelenideElement product0 = products.get(0);
-        String price0 = productListPage.getProductPrice(product0);
-        String name0 = productListPage.getProductName(product0);
-//        String productListUrl = WebDriverRunner.url();
+        ProductCardFragment product0 = products.get(0);
+        String price0 = product0.getPrice();
+        String name0 = product0.getTitle();
 
-        SelenideElement product1 = products.get(1);
-        String price1 = productListPage.getProductPrice(product1);
-        String name1 = productListPage.getProductName(product1);
+        ProductCardFragment product1 = products.get(1);
+        String price1 = product1.getPrice();
+        String name1 = product1.getTitle();
 
-        productListPage.addProductToCompare(product0);
-        productListPage.addProductToCompare(product1);
+        product0.addToCompare();
+        product1.addToCompare();
 
-        products = comparePage.open().getProductsList();
-        comparePage.addProductToBasket(products.get(0));
-        comparePage.addProductToBasket(products.get(2));
+        List<ProductCompareCardFragment> cproducts = comparePage.open().getProductsList();
+        cproducts.get(0).addToBasket();
+        cproducts.get(0).addToBasket();
+//        comparePage.addProductToBasket(products.get(0));
+//        comparePage.addProductToBasket(products.get(2));
 
         comparePage.getBasketFragment().open().getBasketProductList().get(0).shouldHave(Condition.text(name0));
         comparePage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(name1));
 
-        double total = BasePage.extractPrice(price0) + BasePage.extractPrice(price1);
-        productListPage.getBasketFragment().getBasketTotal().shouldHave(Condition.text(BasePage.priceToString(total)));
+        int total = extractPrice(price0) + extractPrice(price1);
+        productListPage.getBasketFragment().getBasketTotal().shouldHave(new MatchPriceCondition(total));
     }
 }

@@ -21,6 +21,11 @@ public class ProductListPage extends BasePage {
         return this;
     }
 
+    public ProductListPage waitForProductListToLoad() {
+        super.waitForProductListToLoad();
+        return this;
+    }
+
     public ProductListPage waitForPageToLoad() {
         super.waitForPageToLoad();
 //        super.closePopup();
@@ -59,8 +64,15 @@ public class ProductListPage extends BasePage {
         return basketFragment;
     }
 
-    public ElementsCollection getProductsList() {
-        return $$x("//div[contains(@class, 'catalog-item product-card__')]");
+    // Для страниц когда вбиваешь в поиске слово
+    public List<ProductCardFragment> getProductsList() {
+//        return $$x("//div[contains(@class, 'catalog-item product-card__')]");
+        return ProductCardFragment.toList($$x("//div[contains(@class, 'catalog-item product-card__')]"));
+    }
+
+    // Для страниц когда кликаешь на бренд и слева есть фильтр
+    public List<ProductCardFragment> getFilteredProductsList() {
+        return ProductCardFragment.toList($$("div.catalog__items .product-card__overview"));
     }
 
     public String getProductPrice(SelenideElement product) {

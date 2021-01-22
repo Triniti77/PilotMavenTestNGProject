@@ -9,28 +9,38 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
-import java.util.concurrent.TimeUnit;
 
 import static com.codeborne.selenide.Selenide.$;
 
 public class BasePage {
+    private final WebDriverWait wait;
     SelenideElement closePopupButton = Selenide.$("i.el-icon-close");
     boolean popupClosed = false;
     static private Robot robot = null;
 
+    BasePage() {
+        wait = new WebDriverWait(WebDriverRunner.getWebDriver(), 15);
+    }
+
+    public static void closeBasketList() {
+        Selenide.$x("//div[contains(@class,'el-dialog__wrapper')]//button[@aria-label='Close'][@class='el-dialog__headerbtn']").click();
+    }
+
     public BasePage waitForPageToLoad() {
-        WebDriverWait wait = new WebDriverWait(WebDriverRunner.getWebDriver(), 15);
         wait.until(webDriver -> ((JavascriptExecutor) WebDriverRunner.getWebDriver()).executeScript("return document.readyState").toString().equals("complete"));
         closePopup();
+        return this;
+    }
+
+    public BasePage waitForProductListToLoad() {
+        //wait.until(webDriver -> !Selenide.$x("//main[contains(@class,'fade-'").exists());
+        waitFor(Selenide.$x("//main[contains(@class,'fade-')]"), 6);
         return this;
     }
 
@@ -78,14 +88,8 @@ public class BasePage {
         return true;
     }
 
-    public static double extractPrice(String price) {
-        String cleanPrice = price.replaceAll("-?[^\\d.]", "");
-        return Double.parseDouble(cleanPrice);
-    }
-
-    public static String priceToString(double price) {
-        DecimalFormat formatter = new DecimalFormat("#,###");
-        return formatter.format(price);
+    public static String getUrl() {
+        return WebDriverRunner.url();
     }
 
     SelenideElement $x(String xpathSelector) {

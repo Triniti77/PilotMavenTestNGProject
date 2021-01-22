@@ -4,6 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 
+import java.util.List;
+
 import static com.codeborne.selenide.Selenide.$x;
 
 public class ComparePage extends BasePage {
@@ -14,16 +16,15 @@ public class ComparePage extends BasePage {
         return this;
     }
 
-    public ElementsCollection getProductsList() {
-        ElementsCollection col = $$("div.catalog-item");
-        col = col.exclude(Condition.not(Condition.visible));
-        return col;
+    public List<ProductCompareCardFragment> getProductsList() {
+        List<ProductCompareCardFragment> list = ProductCompareCardFragment.toList($$("div.catalog-item"));
+        return list;
     }
 
     public ComparePage addProductToBasket(SelenideElement product) {
         String selector = ".//div[@class='itm-footer-desc']//i[contains(@class,'icon-new-citrus-cart')]";
         product.$x(selector).click();
-        $x("//div[contains(@class,'el-dialog__wrapper')]//button[@aria-label='Close'][@class='el-dialog__headerbtn']").click();
+        closeBasketList();
         return this;
     }
 
