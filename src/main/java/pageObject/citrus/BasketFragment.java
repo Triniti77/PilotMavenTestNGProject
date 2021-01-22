@@ -12,7 +12,6 @@ public class BasketFragment {
     SelenideElement basketWidget;
     ElementsCollection productNamesInBasket;
     ElementsCollection productPricesInBasket;
-    // //div[@class='ctrs-basket-product__code']/preceding-sibling::a
     SelenideElement basketTotalPrice;
 
     BasketFragment() {

@@ -39,7 +39,6 @@ public class BasePage {
     }
 
     public BasePage waitForProductListToLoad() {
-        //wait.until(webDriver -> !Selenide.$x("//main[contains(@class,'fade-'").exists());
         waitFor(Selenide.$x("//main[contains(@class,'fade-')]"), 6);
         return this;
     }
@@ -56,8 +55,6 @@ public class BasePage {
     }
 
     public BasePage closePopup() {
-//        randomlyMoveCursor();
-        // add waiter 2 seconds
         if (popupClosed) {
             return this;
         }
@@ -66,13 +63,6 @@ public class BasePage {
             popupClosed = true;
         }
         return this;
-    }
-
-    private void randomlyMoveCursor() {
-        Robot rob = getRobot();
-        WebDriver driver = WebDriverRunner.getWebDriver();
-        Dimension position = driver.manage().window().getSize();
-        rob.mouseMove(position.getWidth()/2 + (int)Math.round(Math.random()*500-250), position.getHeight()/2+(int)Math.round(Math.random()*500-250));
     }
 
     protected boolean waitFor(SelenideElement element, int seconds) {

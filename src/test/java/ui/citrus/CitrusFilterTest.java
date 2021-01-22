@@ -26,8 +26,6 @@ public class CitrusFilterTest {
     @BeforeMethod
     public void cleanBasket() {
         open("/");
-//        clearBrowserLocalStorage();
-//        refresh();
         homePage = new HomePage();
         productListPage = new ProductListPage();
     }

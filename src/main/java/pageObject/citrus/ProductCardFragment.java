@@ -47,13 +47,11 @@ public class ProductCardFragment {
     }
 
     public ProductCardFragment addToCompare() {
-//        String selector = ".//div[@class='itm-footer-desc']//i[contains(@class,'icon-comparison2')]";
         element.hover();
         String selector = ".//button[@class='product-card__to-compare']/span";
         element.$x(selector).click();
         // подождать пока станет зеленая иконка
         String selector2 = ".//button[contains(@class,'product-card__to-compare')][contains(@class,'compare-active')]";
-//        String selector2 = ".//button[@class='product-card__to-compare']//li[contains(@class,'compare-active')]";
         element.$x(selector2).hover();
         return this;
     }

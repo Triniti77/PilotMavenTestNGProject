@@ -35,7 +35,6 @@ public class CitrusComparisonTest {
         refresh();
         homePage = new HomePage();
         productListPage = new ProductListPage();
-//        productPage = new ProductPage();
         comparePage = new ComparePage();
     }
 

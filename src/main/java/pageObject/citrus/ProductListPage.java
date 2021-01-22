@@ -28,25 +28,24 @@ public class ProductListPage extends BasePage {
 
     public ProductListPage waitForPageToLoad() {
         super.waitForPageToLoad();
-//        super.closePopup();
+        super.closePopup();
         return this;
     }
 
     public ProductListPage closePopup() {
-//        super.closePopup();
+        super.closePopup();
         return this;
     }
 
     public String readProductPrice(String productName) {
-//        super.closePopup();
+        super.closePopup();
         String selector = "//h5[contains(text(), '"+productName+"')]/../../..//div[@class='base-price']/span";
         System.out.println(selector);
         return $x(selector).getText();
     }
 
     public ProductListPage addProductToBasket(String productName) {
-//        super.closePopup();
-        // /h5[contains(text(), 'Apple iPhone 12 64GB')]/../../..//div[@class='itm-footer-desc']//i[contains(@class,'icon-new-citrus-cart')]
+        super.closePopup();
         String selector = "//h5[contains(text(), '"+productName+"')]/../../..//div[@class='itm-footer-desc']//i[contains(@class,'icon-new-citrus-cart')]";
         System.out.println(selector);
         $x(selector).click();
@@ -66,7 +65,6 @@ public class ProductListPage extends BasePage {
 
     // Для страниц когда вбиваешь в поиске слово
     public List<ProductCardFragment> getProductsList() {
-//        return $$x("//div[contains(@class, 'catalog-item product-card__')]");
         return ProductCardFragment.toList($$x("//div[contains(@class, 'catalog-item product-card__')]"));
     }
 

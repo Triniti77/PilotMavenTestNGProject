@@ -57,7 +57,6 @@ public class CitrusBasketTest {
     @Test
     public void basketViaProductListPageTest() {
         homePage.waitForPageToLoad()
-//                .closePopup()
                 .getSearchFragment()
                 .searchProduct(productName);
         productListPage.waitForPageToLoad()
@@ -73,7 +72,6 @@ public class CitrusBasketTest {
     @Test
     public void basketViaProductPage2Test() {
         homePage.waitForPageToLoad()
-//                .closePopup()
                 .getSearchFragment()
                 .searchProduct(productName);
 
@@ -104,7 +102,6 @@ public class CitrusBasketTest {
     @Test
     public void basketViaCompareTest() {
         homePage.waitForPageToLoad()
-//                .closePopup()
                 .getSearchFragment()
                 .searchProduct(productName);
         List<ProductCardFragment> products = productListPage.waitForPageToLoad()
@@ -124,8 +121,6 @@ public class CitrusBasketTest {
         List<ProductCompareCardFragment> cproducts = comparePage.open().getProductsList();
         cproducts.get(0).addToBasket();
         cproducts.get(0).addToBasket();
-//        comparePage.addProductToBasket(products.get(0));
-//        comparePage.addProductToBasket(products.get(2));
 
         comparePage.getBasketFragment().open().getBasketProductList().get(0).shouldHave(Condition.text(name0));
         comparePage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(name1));
