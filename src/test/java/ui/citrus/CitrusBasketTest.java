@@ -1,10 +1,15 @@
 package ui.citrus;
 
 import com.codeborne.selenide.*;
+import io.qameta.allure.Step;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import pageObject.citrus.*;
+import ui.citrus.steps.CompareSteps;
+import ui.citrus.steps.HomeSteps;
+import ui.citrus.steps.ProductListSteps;
+import ui.citrus.steps.ProductSteps;
 
 import java.util.List;
 
@@ -12,12 +17,13 @@ import static com.codeborne.selenide.Selenide.*;
 import static pageObject.utils.Price.extractPrice;
 
 public class CitrusBasketTest {
-    HomePage homePage;
-    ProductPage productPage;
-    ProductListPage productListPage;
-    ComparePage comparePage;
 
-    String productName = "Apple iPhone 12 64GB";
+    private HomeSteps homeSteps;
+
+    String[] prices;
+    String[] names;
+
+    private final String productName = "Apple iPhone 11 64GB";
 
     @BeforeClass
     public void setup() {
@@ -31,101 +37,95 @@ public class CitrusBasketTest {
         open("/");
         clearBrowserLocalStorage();
         refresh();
-        homePage = new HomePage();
-        productListPage = new ProductListPage();
-        productPage = new ProductPage();
-        comparePage = new ComparePage();
+        prices = new String[3];
+        names = new String[3];
+        homeSteps = new HomeSteps();
     }
 
     @Test
     public void basketViaProductPageTest() throws Exception {
-        homePage.waitForPageToLoad()
-                .hoverMenuLine("Смартфоны")
-                .clickOnLinkInMenu("Apple");
+        ProductSteps productSteps = homeSteps.clickMenu("Смартфоны", "Apple")
+                .clickProduct(productName)
+                .savePriceAndBuy();
+        basketViaProductPageFinalCheck(productSteps);
+    }
 
-        productListPage.waitForPageToLoad()
-                .clickOnProductByName(productName);
-        String productPrice = productPage.readProductPrice();
-        productPage.clickBuyButton();
-
+    @Step("Final checks with "+productName)
+    private void basketViaProductPageFinalCheck(ProductSteps productSteps) {
+        ProductPage productPage = productSteps.getPage();
         productPage.getBasketFragment().getBasketWidget().shouldBe(Condition.visible);
         productPage.getBasketFragment().getBasketProductList().shouldHaveSize(1); // TODO find correct selector
         productPage.getBasketFragment().getBasketProductList().get(0).shouldHave(Condition.text(productName));
-        productPage.getBasketFragment().getBasketTotal().shouldHave(Condition.text(productPrice));
+        productPage.getBasketFragment().getBasketTotal().shouldHave(Condition.text(productSteps.getPrice()));
     }
 
     @Test
     public void basketViaProductListPageTest() {
-        homePage.waitForPageToLoad()
-                .getSearchFragment()
-                .searchProduct(productName);
-        productListPage.waitForPageToLoad()
-                .closePopup();
-
-        String productPrice = productListPage.readProductPrice(productName);
-        productListPage.addProductToBasket(productName);
-
-        productListPage.getBasketFragment().getBasketWidget().shouldBe(Condition.visible);
-        productListPage.getBasketFragment().getBasketTotal().shouldHave(Condition.text(productPrice));
+        HomeSteps homeSteps = new HomeSteps();
+        ProductListSteps productListSteps = homeSteps.searchFor(productName);
+        String productPrice = productListSteps.getPage().readProductPrice(productName);
+        productListSteps.getPage().addProductToBasket(productName);
+        basketViaProductListPageFinalCheck(productListSteps, productPrice);
     }
+
+    @Step("Final checks with "+productName+" and price {productPrice}")
+    private void basketViaProductListPageFinalCheck(ProductListSteps productListSteps, String productPrice) {
+        productListSteps.getPage().getBasketFragment().getBasketWidget().shouldBe(Condition.visible);
+        productListSteps.getPage().getBasketFragment().getBasketTotal().shouldHave(Condition.text(productPrice));
+    }
+
 
     @Test
     public void basketViaProductPage2Test() {
-        homePage.waitForPageToLoad()
-                .getSearchFragment()
-                .searchProduct(productName);
+        ProductListSteps productListSteps = homeSteps.searchFor(productName);
+        List<ProductCardFragment> products = productListSteps.getProductList();
+        basketViaProductListPageSaveAndCompare(products, 2);
+        basketViaProductPage2FinalCheck(productListSteps, 2);
+    }
 
-        List<ProductCardFragment> products = productListPage.waitForPageToLoad()
-                .getProductsList();
+    @Step("Save product names/price")
+    private void basketViaProductListPageSaveAndCompare(List<ProductCardFragment> products, int number) {
+        prices = new String[number];
+        names = new String[number];
+        for (int i=0; i<number; i++) {
+            ProductCardFragment product = products.get(i);
+            prices[i] = product.getPrice();
+            names[i] = product.getTitle();
+            product.addToCompare();
+        }
 
-        ProductCardFragment product0 = products.get(0);
-        String price0 = product0.getPrice();
-        String name0 = product0.getTitle();
+    }
 
-        ProductCardFragment product1 = products.get(1);
-        String price1 = product1.getPrice();
-        String name1 = product1.getTitle();
-
-        product0.addToCompare();
-        product1.addToCompare();
-
-        productListPage.getBasketFragment().open().getBasketProductList().shouldHaveSize(2);
-        productListPage.getBasketFragment().getBasketProductList().get(0).shouldHave(Condition.text(name0));
-        productListPage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(name1));
-        productListPage.getBasketFragment().getBasketPriceList().get(0).shouldHave(new MatchPriceCondition(price0));
-        productListPage.getBasketFragment().getBasketPriceList().get(1).shouldHave(new MatchPriceCondition(price1));
-
-        int total = extractPrice(price0) + extractPrice(price1);
+    @Step("Final checks of {number} products")
+    private void basketViaProductPage2FinalCheck(ProductListSteps productListSteps, int number) {
+        ProductListPage productListPage = productListSteps.getPage();
+        productListPage.getBasketFragment().open().getBasketProductList().shouldHaveSize(number);
+        int total = 0;
+        for (int i=0; i<number; i++) {
+            productListPage.getBasketFragment().getBasketProductList().get(i).shouldHave(Condition.text(names[i]));
+            productListPage.getBasketFragment().getBasketPriceList().get(i).shouldHave(new MatchPriceCondition(prices[i]));
+            total += extractPrice(prices[i]);
+        }
         productListPage.getBasketFragment().getBasketTotal().shouldHave(new MatchPriceCondition(total));
     }
 
     @Test
     public void basketViaCompareTest() {
-        homePage.waitForPageToLoad()
-                .getSearchFragment()
-                .searchProduct(productName);
-        List<ProductCardFragment> products = productListPage.waitForPageToLoad()
-                .getProductsList();
+        ProductListSteps productListSteps = homeSteps.searchFor(productName);
+        List<ProductCardFragment> products = productListSteps.getProductList();
+        basketViaProductListPageSaveAndCompare(products, 2);
 
-        ProductCardFragment product0 = products.get(0);
-        String price0 = product0.getPrice();
-        String name0 = product0.getTitle();
+        CompareSteps compareSteps = new CompareSteps();
+        compareSteps.addToBasket(2);
+        basketViaCompareFinalCheck(compareSteps, productListSteps);
+    }
 
-        ProductCardFragment product1 = products.get(1);
-        String price1 = product1.getPrice();
-        String name1 = product1.getTitle();
-
-        product0.addToCompare();
-        product1.addToCompare();
-
-        List<ProductCompareCardFragment> cproducts = comparePage.open().getProductsList();
-        cproducts.get(0).addToBasket();
-        cproducts.get(0).addToBasket();
-
-        comparePage.getBasketFragment().open().getBasketProductList().get(0).shouldHave(Condition.text(name0));
-        comparePage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(name1));
-
-        int total = extractPrice(price0) + extractPrice(price1);
-        productListPage.getBasketFragment().getBasketTotal().shouldHave(new MatchPriceCondition(total));
+    @Step("Final checks")
+    private void basketViaCompareFinalCheck(CompareSteps compareSteps, ProductListSteps productListSteps) {
+        ComparePage comparePage = compareSteps.getPage();
+        comparePage.getBasketFragment().open().getBasketProductList().get(0).shouldHave(Condition.text(names[0]));
+        comparePage.getBasketFragment().getBasketProductList().get(1).shouldHave(Condition.text(names[1]));
+        int total = extractPrice(prices[0]) + extractPrice(prices[1]);
+        productListSteps.getPage().getBasketFragment().getBasketTotal().shouldHave(new MatchPriceCondition(total));
     }
 }
