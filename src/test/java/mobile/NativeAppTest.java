@@ -39,9 +39,9 @@ public class NativeAppTest {
         two.click();
         WebElement plus = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'op_add')]"));
         plus.click();
-        WebElement three = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_4')]"));
+        WebElement three = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_3')]"));
         three.click();
-        WebElement eq = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'op_eq')]"));
+        WebElement eq = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'eq')]"));
         eq.click();
         WebElement results = appiumDriver.findElement(By.xpath("//android.widget.TextView[contains(@resource-id, 'result')]"));
         assertEquals("5", results.getText(), "Check the calculator result is 5");
