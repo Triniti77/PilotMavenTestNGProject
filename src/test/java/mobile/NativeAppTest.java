@@ -46,4 +46,25 @@ public class NativeAppTest {
         WebElement results = appiumDriver.findElement(By.xpath("//android.widget.TextView[contains(@resource-id, 'result')]"));
         assertEquals("5", results.getText(), "Check the calculator result is 5");
     }
+
+    @Test
+    public void testCalcMult() throws Exception {
+        WebElement nine = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_9')]"));
+        WebElement mult = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'op_mul')]"));
+        WebElement three = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_3')]"));
+        WebElement four = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_4')]"));
+        WebElement div = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'op_div')]"));
+        WebElement del = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'del')]"));
+        WebElement eq = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'eq')]"));
+        WebElement results = appiumDriver.findElement(By.xpath("//android.widget.TextView[contains(@resource-id, 'result')]"));
+        nine.click();
+        mult.click();
+        nine.click();
+        div.click();
+        four.click();
+        del.click();
+        three.click();
+        eq.click();
+        assertEquals("27", results.getText(), "Check the calculator result is 27");
+    }
 }
