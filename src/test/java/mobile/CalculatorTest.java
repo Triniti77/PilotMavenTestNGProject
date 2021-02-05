@@ -20,10 +20,13 @@ public class CalculatorTest {
     @BeforeMethod
     public void setup() throws MalformedURLException {
         DesiredCapabilities capabilities = new DesiredCapabilities();
-//        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel 2 API 27");
-        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Huawei");
-//        capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
-        capabilities.setCapability(MobileCapabilityType.UDID, "QMU7N17B14000991");
+        capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Pixel 2 API 27");
+        capabilities.setCapability(MobileCapabilityType.UDID, "emulator-5554");
+
+        // for testing device
+        // capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "Huawei");
+        // capabilities.setCapability(MobileCapabilityType.UDID, "QMU7N17B14000991");
+        // capabilities.setCapability(MobileCapabilityType.UDID, "QMU7N17B14000991");
 
 
         URL serverAddress = new URL("http://0.0.0.0:4723/wd/hub");
@@ -56,6 +59,7 @@ public class CalculatorTest {
         del = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'del')]"));
     }
 
+    // for test device
     private void findElements10() {
         one = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_1')]"));
         two = appiumDriver.findElement(By.xpath("//android.widget.Button[contains(@resource-id, 'digit_2')]"));
@@ -101,7 +105,7 @@ public class CalculatorTest {
 
     @Test
     public void testCalcFloat() throws Exception {
-        findElements();
+        findElements(); // findElements1(); // for real device
         eight.click();
         point.click();
         six.click();
@@ -115,7 +119,7 @@ public class CalculatorTest {
 
     @Test
     public void testCalcFloat2() throws Exception {
-        findElements();
+        findElements(); // findElements1(); // for real device
         five.click();
         point.click();
         one.click();
