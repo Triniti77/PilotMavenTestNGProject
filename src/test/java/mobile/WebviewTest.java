@@ -41,8 +41,11 @@ public class WebviewTest {
         AgileProjectPage agilePage = new AgileProjectPage(appiumDriver);
         agilePage.navigate();
         agilePage.makeLogin("1303", "Guru99");
-        Thread.sleep(2000);
-        assertEquals("Guru99 Bank Customer Page",agilePage.getTitle(), "Check the user is logged in");
+        try {
+            Thread.sleep(2000); // wait page loaded
+        } catch (InterruptedException e) {
+        }
+        assertEquals(agilePage.getTitle(), "Guru99 Bank Customer Page","Check the user is logged in");
     }
 
     @AfterClass
