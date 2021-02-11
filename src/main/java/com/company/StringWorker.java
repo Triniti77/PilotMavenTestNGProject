@@ -6,3 +6,4 @@ public class StringWorker {
         return a1+a2+a3;
     }
 }
+
